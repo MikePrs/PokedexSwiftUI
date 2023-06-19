@@ -12,6 +12,12 @@ struct ContentView: View {
     @ObservedObject var apiManager = ApiManager()
     @State private var selectedPokemonIndex = 1
     @State var loading = true
+    @State private var isAnimating = false
+       @State private var showProgress = false
+       var foreverAnimation: Animation {
+           Animation.linear(duration: 2.0)
+               .repeatForever(autoreverses: false)
+       }
     
     func setup() async {
         await fetchPokemon()
@@ -19,7 +25,9 @@ struct ContentView: View {
     
     func fetchPokemon() async {
         await apiManager.fetchPokemon(from: 0, to: 1010)
-        loading = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            loading = false
+        }
     }
     
     func pokemonChanged(_ id:Int){
@@ -59,7 +67,11 @@ struct ContentView: View {
                     }
                 }
             }else{
-                ProgressView()
+                Image("pokeballSpin").resizable().frame(width: 100,height: 100)
+                                    .rotationEffect(Angle(degrees: self.isAnimating ? 360 : 0.0))
+                                    .animation(self.isAnimating ? foreverAnimation : .default, value: isAnimating)
+                                    .onAppear { self.isAnimating = true }
+                                    .onDisappear { self.isAnimating = false }
             }
         }.task{
             await self.setup()
@@ -72,4 +84,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
 
