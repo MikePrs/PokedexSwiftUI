@@ -9,71 +9,33 @@ import Foundation
 class ApiManager:ObservableObject {
     @Published var pokemonList = [Pokemon]()
     func fetchPokemon(from:Int,to:Int)async{
-        for i in from...to{
             do {
-                let url = URL(string: "https://pokeapi.co/api/v2/pokemon/"+String(i))!
+                let url = URL(string: "https://pokeapi.co/api/v2/pokemon/?offset="+String(from)+"&limit="+String(to))!
                 let (data, _) = try await URLSession.shared.data(from: url)
-                let decodedData = try JSONDecoder().decode(Pokemon.self, from: data)
+                let decodedData = try JSONDecoder().decode(PokemonList.self, from: data)
+                print(String(decodedData.results[0].url.split(separator: "/").last!))
                 DispatchQueue.main.async {
-                    self.pokemonList.append(decodedData)
+                    self.pokemonList = (decodedData.results)
                 }
-                //            if let url = URL(string:"https://pokeapi.co/api/v2/pokemon/"+String(i)){
-                //                let session = try await URLSession(configuration: .default)
-                //                let task = session.dataTask(with: url){(data , response,error) in
-                //                    if error==nil {
-                //                        let decoder = JSONDecoder()
-                //                        if let safeData = data {
-                //                            do{
-                //                                let group = DispatchGroup()
-                //                                    group.enter()
-                //                                let res = try decoder.decode(Pokemon.self, from:safeData)
-                //
-                //                                DispatchQueue.main.async {
-                //                                    self.pokemonList.append(res)
-                //                                    group.leave()
-                //                                }
-                //                                group.notify(queue: .main) {
-                //                                    self.pokemonList=self.pokemonList.sorted(by: { $0.id < $1.id })
-                //                                }
-                //                            }catch{
-                //                                print(error)
-                //                            }
-                //                        }
-                //                    }
-                //                }
-                //                task.resume()
-                //                print("end")
-                //            }
             } catch {
                 print("Error fetching data: \(error)")
             }
-            
-        }
-    }
-    
-    func getPokemon()->[Pokemon]{
-        return pokemonList
     }
 }
 
 
 
-struct Pokemon : Codable,Identifiable{
+struct PokemonList : Codable{
+    var results:[Pokemon]
+}
+struct Pokemon:Codable,Identifiable{
     var name:String
-    var id:Int
-    var sprites:Sprites
-    var types:[typeElement]
+    var url:String
+    var id:Int{
+        return Int(url.split(separator: "/").last!)!
+    }
+    var pokemonId:String{
+        return String(format:"%03d", id)
+    }
 }
 
-struct Sprites : Codable{
-    var front_default:String
-    var front_shiny:String
-}
-
-struct typeElement : Codable {
-    var type:PokemonType
-}
-
-struct PokemonType : Codable {
-    var name:String
-}

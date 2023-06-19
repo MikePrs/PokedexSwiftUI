@@ -18,8 +18,12 @@ struct ContentView: View {
     }
     
     func fetchPokemon() async {
-        await apiManager.fetchPokemon(from: 0, to: 100)
+        await apiManager.fetchPokemon(from: 0, to: 1010)
         loading = false
+    }
+    
+    func pokemonChanged(_ id:Int){
+        
     }
     
     var body: some View {
@@ -45,12 +49,13 @@ struct ContentView: View {
                         Picker("",selection:$selectedPokemonIndex){
                             ForEach(apiManager.pokemonList){ pok in
                                 HStack{
-                                    Text(pok.name)
+                                    Text(pok.name).tag(pok.id)
                                     Spacer()
-                                    Text(String(format:"%03d", pok.id))
+                                    Text(pok.pokemonId)
                                 }
                             }
                         }.pickerStyle(.wheel)
+                            .onChange(of: selectedPokemonIndex) { tag in  pokemonChanged(tag)}
                     }
                 }
             }else{
