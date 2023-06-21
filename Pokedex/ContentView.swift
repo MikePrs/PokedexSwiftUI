@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var isAnimating = false
     @State private var showProgress = false
     @State private var searchText = ""
+    @State var isImageFront=true
     
     var foreverAnimation: Animation {
         Animation.linear(duration: 2.0)
@@ -37,8 +38,6 @@ struct ContentView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             loading = false
         }
-        
-        print(nameIdMap)
     }
     
     @State var types=[String]()
@@ -51,9 +50,6 @@ struct ContentView: View {
         withAnimation() {
             self.animateFlag.toggle()
         }
-        
-
-        print(apiManager.pokemonDetails[0])
     }
     
     var body: some View {
@@ -67,7 +63,13 @@ struct ContentView: View {
                     .ignoresSafeArea(.all)
                 ZStack{
                     VStack{
-                        HStack{Image(systemName: "circle.fill").foregroundColor(.green);Spacer()}.padding(.leading,20)
+                            HStack{
+                                Image(systemName: "circle.fill").foregroundColor(.green).opacity(self.isAnimating ? 1 : 0)
+                                    .animation(Animation.easeInOut(duration: 2).repeatForever(autoreverses: false),value:isAnimating)
+                                    .onAppear{self.isAnimating = true}
+                                    .onDisappear(){self.isAnimating = false}
+                                Spacer()
+                            }.padding(.leading,20)
                         HStack{
                             Spacer()
                             if animateFlag{
@@ -82,11 +84,18 @@ struct ContentView: View {
                         }
                         
                         if animateFlag{
-                            AsyncImage(url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+String(selectedPokemonIndex)+".png")) { image in
-                                image.resizable()
-                            } placeholder: {
-                                ProgressView()
-                            }.frame(width: 250, height: 250).background(.white.opacity(0.3)).cornerRadius(180.0).transition(.scale)
+                            Button {
+                                isImageFront.toggle()
+                            } label: {
+                                    AsyncImage(url: URL(string:  isImageFront
+                                    ? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+String(selectedPokemonIndex)+".png"
+                                    : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/"+String(selectedPokemonIndex)+".png"))
+                                    { image in
+                                        image.resizable()
+                                    } placeholder: {
+                                        ProgressView()
+                                    }.frame(width: 250, height: 250).background(.white.opacity(0.3)).cornerRadius(180.0).transition(.scale)
+                            }
                             HStack{
                                 Image(types[0]).resizable().frame(width: 90,height: 35).padding(20)
                                 Spacer()
