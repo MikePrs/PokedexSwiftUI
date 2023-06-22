@@ -63,80 +63,81 @@ struct ContentView: View {
                     .frame(minWidth: 0)
                     .ignoresSafeArea(.all)
                 ZStack{
-                    VStack{
-                        HStack{
-                            Image(systemName: "circle.fill").foregroundColor(.green).padding(.bottom,10).opacity(self.isAnimating ? 1 : 0).animation(Animation.easeInOut(duration: 2).repeatForever(autoreverses: false),value:isAnimating)
-                                .onAppear{self.isAnimating = true}
-                                .onDisappear(){self.isAnimating = false}
-                            Spacer()
-                        }.padding(.leading,20)
-                        HStack{
+                    VStack(spacing: 0){
+                        VStack(spacing:0){
+                            HStack{
+                                Image(systemName: "circle.fill").foregroundColor(.green).padding(.bottom,10).opacity(self.isAnimating ? 1 : 0).animation(Animation.easeInOut(duration: 2).repeatForever(autoreverses: false),value:isAnimating)
+                                    .onAppear{self.isAnimating = true}
+                                    .onDisappear(){self.isAnimating = false}
+                                Spacer()
+                            }.padding(.leading,20)
+                            HStack{
+                                if animateFlag{
+                                    Button {
+                                        isShiny.toggle()
+                                    } label: {
+                                        HStack{
+                                            Text(!isShiny ? "Shiny": "Classic").foregroundColor(.black)
+                                                .font(.custom("AmericanTypewriter",fixedSize: 22)).padding(3).padding(.leading,25).padding(.trailing,10)
+                                        }.background(!isShiny ? .yellow : .white).roundedCorner(20, corners: [.topRight])
+                                    }.transition(.slide)
+                                    Spacer()
+                                    HStack{
+                                        Text("\(apiManager.pokemonList[selectedPokemonIndex-1].name.capitalized)")
+                                            .font(.custom("AmericanTypewriter",fixedSize: 22)).padding(3).padding(.leading,25).padding(.trailing,10)
+                                    }.transition(.backslide).background(.white).roundedCorner(20, corners: [.bottomLeft])
+                                    
+                                }else{
+                                    HStack{}.padding(16)
+                                }
+                            }
+                            
                             if animateFlag{
                                 Button {
-                                    isShiny.toggle()
+                                    isImageFront.toggle()
                                 } label: {
-                                    HStack{
-                                        Text(!isShiny ? "Shiny": "Classic").foregroundColor(.black)
-                                            .font(.custom("AmericanTypewriter",fixedSize: 22)).padding(3).padding(.leading,25).padding(.trailing,10)
-                                    }.background(!isShiny ? .yellow : .white).roundedCorner(20, corners: [.topRight])
-                                }.transition(.slide)
-                                Spacer()
-                                HStack{
-                                    Text("\(apiManager.pokemonList[selectedPokemonIndex-1].name.capitalized)")
-                                        .font(.custom("AmericanTypewriter",fixedSize: 22)).padding(3).padding(.leading,25).padding(.trailing,10)
-                                }.transition(.backslide).background(.white).roundedCorner(20, corners: [.bottomLeft])
-                                
-                            }else{
-                                HStack{}.padding(16)
-                            }
-                        }
-                        
-                        if animateFlag{
-                            Button {
-                                isImageFront.toggle()
-                            } label: {
-                                AsyncImage(url: URL(string:  isImageFront
-                                                    ? isShiny ?  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/"+String(selectedPokemonIndex)+".png"
-                                                    :
-                                                        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+String(selectedPokemonIndex)+".png"
-                                                    : isShiny ?  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/"+String(selectedPokemonIndex)+".png"
-                                                    : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/"+String(selectedPokemonIndex)+".png"))
-                                { image in
-                                    image.resizable()
-                                } placeholder: {
-                                    ProgressView()
-                                }.frame(width: 250, height: 250).background(.white.opacity(0.3)).cornerRadius(180.0).transition(.scale)
-                            }
-                            HStack{
-                                HStack{
-                                    Image(types[0]).resizable().frame(width: 90,height: 35).padding(20)
-                                }.transition(.backslide)
-                                Spacer()
-                                if types.count > 1{
-                                    HStack{
-                                        Image(types[1]).resizable().frame(width: 90,height: 35).padding(20)
-                                    }.transition(.slide)
+                                    AsyncImage(url: URL(string:  isImageFront
+                                                        ? isShiny ?  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/"+String(selectedPokemonIndex)+".png"
+                                                        :
+                                                            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+String(selectedPokemonIndex)+".png"
+                                                        : isShiny ?  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/"+String(selectedPokemonIndex)+".png"
+                                                        : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/"+String(selectedPokemonIndex)+".png"))
+                                    { image in
+                                        image.resizable()
+                                    } placeholder: {
+                                        ProgressView()
+                                    }.frame(minWidth: 200, minHeight: 200).background(.white.opacity(0.3)).cornerRadius(180.0).transition(.scale)
+                                        .scaledToFit()
                                 }
-                            }
-                        }else{
-                            Spacer()
-                            Image("openPokeball").resizable().frame(width: 80,height: 55)
-                            Spacer()
-                        }
-                        
-                        Spacer()
-                        Picker("",selection:$selectedPokemonIndex){
-                            ForEach(apiManager.pokemonList){ pok in
                                 HStack{
-                                    Image("pokeballSpin").resizable().frame(width: 30,height: 30)
-                                    Text(pok.name.capitalized).tag(pok.id)
+                                    Image(types[0]).resizable().frame(width: 90,height: 35).transition(.backslide)
                                     Spacer()
-                                    Text(pok.pokemonId)
-                                }
+                                    if types.count > 1{
+                                        Image(types[1]).resizable().frame(width: 90,height: 35).transition(.slide)
+                                    }
+                                }.padding(.horizontal).padding(.bottom)
+                            }else{
+                                Spacer()
+                                Image("openPokeball").resizable()
+                                    .frame(width: 80,height: 55).border(.white).padding(50)
                             }
-                        }.pickerStyle(.wheel)
-                            .onChange(of: selectedPokemonIndex) { tag in  Task{await pokemonChanged(tag)}}
-                        
+                            Spacer()
+                        }.border(.green)
+                        VStack{
+                            Spacer()
+                            Picker("",selection:$selectedPokemonIndex){
+                                ForEach(apiManager.pokemonList){ pok in
+                                    HStack{
+                                        Image("pokeballSpin").resizable().frame(width: 30,height: 30)
+                                        Text(pok.name.capitalized).tag(pok.id)
+                                        Spacer()
+                                        Text(pok.pokemonId)
+                                    }
+                                }
+                            }.pickerStyle(.wheel)
+                                .onChange(of: selectedPokemonIndex) { tag in  Task{await pokemonChanged(tag)}}
+                            Spacer()
+                        }.border(.blue)
                     }
                 }
                 
