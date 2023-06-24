@@ -12,6 +12,8 @@
 		0558831F2A3E984400CFA42E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0558831E2A3E984400CFA42E /* Preview Assets.xcassets */; };
 		055883282A3E99AA00CFA42E /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055883272A3E99AA00CFA42E /* ApiManager.swift */; };
 		05BF3B4C2A423758006CD172 /* Searchbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BF3B4B2A423758006CD172 /* Searchbar.swift */; };
+		05BF3B522A4750EF006CD172 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BF3B512A4750EF006CD172 /* Extensions.swift */; };
+		05BF3B542A475141006CD172 /* PokemonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BF3B532A475141006CD172 /* PokemonModel.swift */; };
 		05D3F8402A3F92E1001B2F66 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0558831B2A3E984400CFA42E /* Assets.xcassets */; };
 		1ACCF8885682F1D2134B58E1 /* libPods-Pokedex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 80190EA9242A82657CDF295D /* libPods-Pokedex.a */; };
 /* End PBXBuildFile section */
@@ -24,6 +26,8 @@
 		0558831E2A3E984400CFA42E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		055883272A3E99AA00CFA42E /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
 		05BF3B4B2A423758006CD172 /* Searchbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Searchbar.swift; sourceTree = "<group>"; };
+		05BF3B512A4750EF006CD172 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		05BF3B532A475141006CD172 /* PokemonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonModel.swift; sourceTree = "<group>"; };
 		73C6817FCC524B3DC5C62D3B /* Pods-Pokedex.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pokedex.release.xcconfig"; path = "Target Support Files/Pods-Pokedex/Pods-Pokedex.release.xcconfig"; sourceTree = "<group>"; };
 		80190EA9242A82657CDF295D /* libPods-Pokedex.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pokedex.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5220E2C85AB8230AAF0811A /* Pods-Pokedex.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pokedex.debug.xcconfig"; path = "Target Support Files/Pods-Pokedex/Pods-Pokedex.debug.xcconfig"; sourceTree = "<group>"; };
@@ -84,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				055883272A3E99AA00CFA42E /* ApiManager.swift */,
+				05BF3B532A475141006CD172 /* PokemonModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -92,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				05BF3B4B2A423758006CD172 /* Searchbar.swift */,
+				05BF3B512A4750EF006CD172 /* Extensions.swift */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -209,6 +215,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05BF3B522A4750EF006CD172 /* Extensions.swift in Sources */,
+				05BF3B542A475141006CD172 /* PokemonModel.swift in Sources */,
 				0558831A2A3E984300CFA42E /* ContentView.swift in Sources */,
 				05BF3B4C2A423758006CD172 /* Searchbar.swift in Sources */,
 				055883282A3E99AA00CFA42E /* ApiManager.swift in Sources */,

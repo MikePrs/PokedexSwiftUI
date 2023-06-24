@@ -96,12 +96,7 @@ struct ContentView: View {
                                 Button {
                                     isImageFront.toggle()
                                 } label: {
-                                    AsyncImage(url: URL(string:  isImageFront
-                                                        ? isShiny ?  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/"+String(selectedPokemonIndex)+".png"
-                                                        :
-                                                            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+String(selectedPokemonIndex)+".png"
-                                                        : isShiny ?  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/"+String(selectedPokemonIndex)+".png"
-                                                        : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/"+String(selectedPokemonIndex)+".png"))
+                                    AsyncImage(url: URL(string:  getImage(isImageFront,isShiny,String(selectedPokemonIndex))))
                                     { image in
                                         image.resizable()
                                     } placeholder: {
@@ -119,10 +114,10 @@ struct ContentView: View {
                             }else{
                                 Spacer()
                                 Image("openPokeball").resizable()
-                                    .frame(width: 80,height: 55).border(.white).padding(50)
+                                    .frame(width: 80,height: 55).padding(50)
                             }
                             Spacer()
-                        }.border(.green)
+                        }
                         VStack{
                             Spacer()
                             Picker("",selection:$selectedPokemonIndex){
@@ -137,7 +132,7 @@ struct ContentView: View {
                             }.pickerStyle(.wheel)
                                 .onChange(of: selectedPokemonIndex) { tag in  Task{await pokemonChanged(tag)}}
                             Spacer()
-                        }.border(.blue)
+                        }
                     }
                 }
                 
@@ -154,32 +149,19 @@ struct ContentView: View {
     }
 }
 
+                                               
+func getImage(_ isImageFront:Bool , _ isShiny:Bool , _ selectedPokemonIndex:String) -> String{
+    return isImageFront
+    ? isShiny ?  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/"+selectedPokemonIndex+".png"
+    :
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+selectedPokemonIndex+".png"
+    : isShiny ?  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/"+selectedPokemonIndex+".png"
+    : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/"+selectedPokemonIndex+".png"
+}
+
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
-}
-
-
-struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
-    }
-}
-
-extension View {
-    func roundedCorner(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners) )
-    }
-}
-
-extension AnyTransition {
-    static var backslide: AnyTransition {
-        AnyTransition.asymmetric(
-            insertion: .move(edge: .trailing),
-            removal: .move(edge: .leading))}
 }
