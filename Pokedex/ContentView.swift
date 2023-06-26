@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Kingfisher
 
 struct ContentView: View {
     @ObservedObject var apiManager = ApiManager()
@@ -68,12 +67,6 @@ struct ContentView: View {
                     ZStack{
                         VStack(spacing: 0){
                             VStack(spacing:0){
-//                                HStack{
-//                                    Image(systemName: "circle.fill").foregroundColor(.green).padding(.bottom,10).opacity(self.isAnimating ? 1 : 0).animation(Animation.easeInOut(duration: 2).repeatForever(autoreverses: false),value:isAnimating)
-//                                        .onAppear{self.isAnimating = true}
-//                                        .onDisappear(){self.isAnimating = false}
-//                                    Spacer()
-//                                }.padding(.leading,20)
                                 HStack{
                                     if animateFlag{
                                         Button {
@@ -142,6 +135,7 @@ struct ContentView: View {
                             .frame(minWidth: 0)
                             .edgesIgnoringSafeArea(.all)
                             .ignoresSafeArea(.all)
+                            .aspectRatio(contentMode: .fill)
                     }
                 }
                 .searchable(text: $searchText)
