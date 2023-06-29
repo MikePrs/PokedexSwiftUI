@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var searchText = ""
     @State var isImageFront=true
     @State var isShiny=false
+    @State var scrollAmount = 0.0
     
     var foreverAnimation: Animation {
         Animation.linear(duration: 2.0)
@@ -63,31 +64,9 @@ struct ContentView: View {
         
         ZStack {
             if !loading{
-                NavigationView {
                     ZStack{
                         VStack(spacing: 0){
                             VStack(spacing:0){
-                                HStack{
-                                    if animateFlag{
-                                        Button {
-                                            isShiny.toggle()
-                                        } label: {
-                                            HStack{
-                                                Text(!isShiny ? "Shiny": "Classic").foregroundColor(.black)
-                                                    .font(.custom("AmericanTypewriter",fixedSize: 22)).padding(3).padding(.leading,25).padding(.trailing,10)
-                                            }.background(!isShiny ? .yellow : .white).roundedCorner(20, corners: [.topRight])
-                                        }.transition(.slide)
-                                        Spacer()
-                                        HStack{
-                                            Text("\(apiManager.pokemonList[selectedPokemonIndex-1].name.capitalized)")
-                                                .font(.custom("AmericanTypewriter",fixedSize: 22)).padding(3).padding(.leading,25).padding(.trailing,10).foregroundColor(.black)
-                                        }.transition(.backslide).background(.white).roundedCorner(20, corners: [.bottomLeft])
-                                        
-                                    }else{
-                                        HStack{}.padding(16)
-                                    }
-                                }
-                                
                                 if animateFlag{
                                     Button {
                                         isImageFront.toggle()
@@ -97,50 +76,50 @@ struct ContentView: View {
                                             image.resizable()
                                         } placeholder: {
                                             ProgressView()
-                                        }.frame(minWidth: 200, minHeight: 200).background(.white.opacity(0.3)).cornerRadius(180.0).transition(.scale)
-                                            .scaledToFit()
-                                    }
+                                        }
+                                    }.frame(width: 120, height:120).background(.white.opacity(0.3)).cornerRadius(180.0).transition(.scale)
+                                        .padding(.top,30)
+                                        .scaledToFit()
                                     HStack{
-                                        Image(types[0]).resizable().frame(width: 90,height: 35).transition(.backslide)
+                                        Image(types[0]).resizable().frame(width: 50,height: 25).transition(.backslide)
                                         Spacer()
                                         if types.count > 1{
-                                            Image(types[1]).resizable().frame(width: 90,height: 35).transition(.slide)
+                                            Image(types[1]).resizable().frame(width: 50,height: 25).transition(.slide)
                                         }
-                                    }.padding(.horizontal).padding(.bottom)
+                                    }.padding(.horizontal)
                                 }else{
                                     Spacer()
-                                    Image("openPokeball").resizable().frame(width: 80,height: 55).padding(50)
+                                    HStack{
+                                        Image("openPokeball").resizable().frame(width: 40,height: 30)
+                                    }.frame(height: 70).padding(50)
                                 }
-                                Spacer()
                             }
                             VStack{
-                                Spacer()
+                                
                                 Picker("",selection:$selectedPokemonIndex){
                                     ForEach(apiManager.pokemonList){ pok in
                                         HStack{
-                                            Image("pokeballSpin").resizable().frame(width: 30,height: 30).foregroundColor(.black)
+                                            Image("pokeballSpin").resizable().frame(width: 30,height: 30)
                                             Text(pok.name.capitalized).tag(pok.id).foregroundColor(.black)
                                             Spacer()
                                             Text(pok.pokemonId).foregroundColor(.black)
                                         }
                                     }
-                                }.pickerStyle(.wheel)
+                                }.focusBorderHidden().pickerStyle(.wheel).frame(height: 110).clipped()
                                     .onChange(of: selectedPokemonIndex) { tag in  Task{await pokemonChanged(tag)}}
-                                Spacer()
                             }
                         }
-                    }.background {Image("pokeballBackground")
+                    }
+                    .background
+                    {Image("pokeballBackground")
                             .resizable()
                             .scaledToFill()
-                            .frame(minWidth: 0)
+                            .frame(alignment: .center)
                             .edgesIgnoringSafeArea(.all)
                             .ignoresSafeArea(.all)
                             .aspectRatio(contentMode: .fill)
                     }
-                }
-                .searchable(text: $searchText)
-                .onSubmit(of: .search, serachAction)
-                .disableAutocorrection(true)
+               
             }else{
                 Image("pokeballSpin").resizable().frame(width: 100,height: 100)
                     .rotationEffect(Angle(degrees: self.isAnimating ? 360 : 0.0))
